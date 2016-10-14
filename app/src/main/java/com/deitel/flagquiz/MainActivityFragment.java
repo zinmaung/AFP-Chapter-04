@@ -58,6 +58,12 @@ public class MainActivityFragment extends Fragment {
    private LinearLayout[] guessLinearLayouts; // rows of answer Buttons
    private TextView answerTextView; // displays correct answer
 
+   // create a global container for attempts // zin
+   private int[] attemptList = new int [FLAGS_IN_QUIZ];
+
+   // this is array index // zin
+   private int idx;
+
    // configures the MainActivityFragment when its View is created
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -107,6 +113,15 @@ public class MainActivityFragment extends Fragment {
       return view; // return the fragment's view for display
    }
 
+   // This method resets the attempt array // Zin
+   private void resetAttemptArray()
+   {
+      for (int i = 0;  i < FLAGS_IN_QUIZ; i++)
+      {
+         attemptList[i] = 0;
+      }
+   }
+
    // update guessRows based on value in SharedPreferences
    public void updateGuessRows(SharedPreferences sharedPreferences) {
       // get the number of guess buttons that should be displayed
@@ -134,6 +149,9 @@ public class MainActivityFragment extends Fragment {
       // use AssetManager to get image file names for enabled regions
       AssetManager assets = getActivity().getAssets();
       fileNameList.clear(); // empty list of image file names
+
+      // zero out all values in the array // Zin
+      resetAttemptArray();
 
       try {
          // loop through each region
@@ -170,11 +188,18 @@ public class MainActivityFragment extends Fragment {
          }
       }
 
+      // reset array index // Zin
+      idx = -1;
+
       loadNextFlag(); // start the quiz by loading the first flag
    }
 
    // after the user guesses a correct flag, load the next flag
    private void loadNextFlag() {
+
+      // increment array index // Zin
+      idx++;
+
       // get file name of the next flag and remove it from the list
       String nextImage = quizCountriesList.remove(0);
       correctAnswer = nextImage; // update the correct answer
@@ -269,6 +294,7 @@ public class MainActivityFragment extends Fragment {
                @Override
                public void onAnimationEnd(Animator animation) {
                   loadNextFlag();
+
                }
             }
          );
@@ -290,6 +316,9 @@ public class MainActivityFragment extends Fragment {
          String guess = guessButton.getText().toString();
          String answer = getCountryName(correctAnswer);
          ++totalGuesses; // increment number of guesses the user has made
+
+         //increment attempt // Zin
+         attemptList[idx]++;
 
          if (guess.equals(answer)) { // if the guess is correct
             ++correctAnswers; // increment the number of correct answers
