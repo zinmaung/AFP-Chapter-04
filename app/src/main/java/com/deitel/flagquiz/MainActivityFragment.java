@@ -61,7 +61,7 @@ public class MainActivityFragment extends Fragment {
    // create a global container for attempts // zin
    private int[] attemptList = new int [FLAGS_IN_QUIZ];
 
-   // this is array index // zin
+   // this is array index // zin //
    private int idx;
 
    // configures the MainActivityFragment when its View is created
